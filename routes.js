@@ -4,7 +4,7 @@ var path = require("path");
 
 var User = require("./models/user");
 var router = express.Router();
-
+const myDatabase = require('./myDatabase');
 //function ensureAuthenticated(req, res, next) {
 //  if (req.isAuthenticated()) {
 //    next();
@@ -22,37 +22,63 @@ router.use(function(req, res, next) {
 });
 
 
+let db = new myDatabase();
+router.get('/read', function(req, res){
+	db.getAllObjects(res);
+});
+router.get('/read/:ident', function(req, res){
+	 db.getObjectWithID(res,req.params.ident);
+});
+router.post('/create', function(req, res){
+	if (req.body.name == "") {
+		res.json(null);
+		return;
+	}
+db.addObject(res,{ident:req.body.ident,name:req.body.name});
+});
+router.put('/update', function(req, res){
+	if (req.body.name == "") {
+		res.json(null);
+		return;
+	}
+	db.changeObject(res,req.body.ident,req.body.name);
+});
+router.delete('/delete/:ident', function(req, res){
+	db.deleteObjectWithID(res,req.params.ident);
+});
+
+
 
 
 
 
 router.get("/successroot", function(req, res) {
 console.log("get successroot");
-	res.json({redirect:"/"});	
+	res.json({redirect:"/"});
 });
 
 router.get("/failroot", function(req, res) {
 console.log("get failroot");
-	res.json({redirect:"/login"});	
+	res.json({redirect:"/login"});
 });
 
 router.get("/successsignup", function(req, res) {
 console.log("get successsignup");
-	res.json({redirect:"/session"});	
+	res.json({redirect:"/session"});
 });
 
 router.get("/failsignup", function(req, res) {
 console.log("get failsignup");
-	res.json({redirect:"/login"});	
+	res.json({redirect:"/login"});
 });
 
 router.get("/successlogin", function(req, res) {
 console.log("get successsignup");
-	res.json({redirect:"/session"});	
+	res.json({redirect:"/session"});
 });
 router.get("/faillogin", function(req, res) {
 console.log("get failsignup");
-	res.json({redirect:"/login"});	
+	res.json({redirect:"/login"});
 
 });
 
@@ -60,8 +86,8 @@ console.log("get failsignup");
 
 router.get("/", function(req, res, next) {
 console.log("get root");
-	let thePath = path.resolve(__dirname,"public/views/login.html");		
-	res.sendFile(thePath);	
+	let thePath = path.resolve(__dirname,"public/views/login.html");
+	res.sendFile(thePath);
 
  // User.find()
  // .sort({ createdAt: "descending" })
@@ -75,16 +101,16 @@ console.log("get root");
 router.get("/signup", function(req, res) {
 console.log("get signup");
 
-	let thePath = path.resolve(__dirname,"public/views/signup.html");		
-	res.sendFile(thePath);	
+	let thePath = path.resolve(__dirname,"public/views/signup.html");
+	res.sendFile(thePath);
 
 });
 
 router.get("/login", function(req, res) {
 console.log("get login");
 
-	let thePath = path.resolve(__dirname,"public/views/login.html");		
-	res.sendFile(thePath);	
+	let thePath = path.resolve(__dirname,"public/views/login.html");
+	res.sendFile(thePath);
 
 });
 
@@ -92,11 +118,11 @@ console.log("get login");
 router.get("/session", function(req, res) {
   console.log("get session");
   if (req.isAuthenticated()) {
-	let thePath = path.resolve(__dirname,"public/views/session.html");		
-	res.sendFile(thePath);	
+	let thePath = path.resolve(__dirname,"public/views/session.html");
+	res.sendFile(thePath);
   } else {
-  	let thePath = path.resolve(__dirname,"public/views/login.html");		
-	res.sendFile(thePath);	
+  	let thePath = path.resolve(__dirname,"public/views/login.html");
+	res.sendFile(thePath);
   }
 });
 
