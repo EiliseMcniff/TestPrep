@@ -1,5 +1,5 @@
 var mongoose = require('mongoose');
-var User = require('./models/Info.js');
+var User = require('./models/user.js');
 mongoose.connect('mongodb://localhost/mongooseExample');
 
 let myDatabase = function() {

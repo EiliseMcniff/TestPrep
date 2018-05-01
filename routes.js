@@ -4,7 +4,7 @@ var path = require("path");
 
 var User = require("./models/user");
 var router = express.Router();
-const myDatabase = require('./myDatabase');
+
 //function ensureAuthenticated(req, res, next) {
 //  if (req.isAuthenticated()) {
 //    next();
@@ -19,32 +19,6 @@ router.use(function(req, res, next) {
   res.locals.errors = req.flash("error");
   res.locals.infos = req.flash("info");
   next();
-});
-
-
-let db = new myDatabase();
-router.get('/read', function(req, res){
-	db.getAllObjects(res);
-});
-router.get('/read/:ident', function(req, res){
-	 db.getObjectWithID(res,req.params.ident);
-});
-router.post('/create', function(req, res){
-	if (req.body.name == "") {
-		res.json(null);
-		return;
-	}
-db.addObject(res,{ident:req.body.ident,name:req.body.name});
-});
-router.put('/update', function(req, res){
-	if (req.body.name == "") {
-		res.json(null);
-		return;
-	}
-	db.changeObject(res,req.body.ident,req.body.name);
-});
-router.delete('/delete/:ident', function(req, res){
-	db.deleteObjectWithID(res,req.params.ident);
 });
 
 
@@ -85,7 +59,7 @@ console.log("get failsignup");
 
 
 router.get("/", function(req, res, next) {
-console.log("get root");
+console.log("1");
 	let thePath = path.resolve(__dirname,"public/views/login.html");
 	res.sendFile(thePath);
 
