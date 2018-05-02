@@ -1,9 +1,13 @@
 var express = require("express");
 var passport = require("passport");
 var path = require("path");
-
+var sports = require('./sportsModule');
+sports('andrewyates', 'T4pQsEYsxXop');
 var User = require("./models/user");
 var router = express.Router();
+const myDatabase = require('./myDatabase');
+
+let db = new myDatabase();
 
 //function ensureAuthenticated(req, res, next) {
 //  if (req.isAuthenticated()) {
@@ -87,8 +91,38 @@ console.log("get login");
 	res.sendFile(thePath);
 
 });
+//////////////////////////////////////////////////////////
+router.post('/create', function(req, res){
+  if(req.isAuthenticated())
+  {
+  	if (req.body.name == "") {
+  		res.json(null);
+  		return;
+  	}
+    db.addObject(res,{ident:req.body.ident,name:req.body.name});
+  }else {
+    req.logout();
+    res.json({redirect:"/login"});
+  }
 
 
+});
+router.get("/requestNBA", function(req, res, next) {
+  if(req.isAuthenticated())
+  {
+	sports.NBA.getNBAPlayerStats( req.query.firstname,req.query.lastname,function (err, obj) {
+    		if (err) {
+        		return console.log('Error occurred active_players: ' + err);
+    		}
+
+		res.json({"info":obj});
+	});
+}else {
+  req.logout();
+  res.json({redirect:"/login"});
+}
+});
+////////////////////////////////////////////////
 router.get("/session", function(req, res) {
   console.log("get session");
   if (req.isAuthenticated()) {

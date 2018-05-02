@@ -1,6 +1,5 @@
 var mongoose = require('mongoose');
-var User = require('./models/user.js');
-mongoose.connect('mongodb://localhost/mongooseExample');
+var User = require('./models/info.js');
 
 let myDatabase = function() {
 	this.infoList = [];

@@ -12,10 +12,34 @@
 
   <body>
 <h1 id="session">Session</h1>
-
 <div id="logout">
     <input id="logout" type="button" value="Logout" />
-</div>    
+</div>
+<br>
+<br>
+<label>Ident</label>
+  <input id="ident" name="ident" type="number" min="0"/><br>
+  <label>Name</label>
+  <input id="name" name="title" type="text"/><br>
+
+  <div id="create">
+    <input id="createButton" type="button" value="Create" />
+  </div>
+  <br>
+  <br>
+  <select id="player">
+    <option></option>
+    <option value="chris-paul">chris-paul</option>
+    <option value="lebron-james">lebron-james</option>
+    <option value="james-harden">james-harden</option>
+  </select>
+  <br>
+  <div id="display">
+    <input id="displayButton" type="button" value="Display" />
+  </div>
+  <br>
+  <ul id="playerStats"></ul>
+
 
 	<script src="js/session.js"></script>
 
