@@ -1,5 +1,5 @@
 var mongoose = require('mongoose');
-var User = require('./models/info.js');
+var Team = require("./models/teamname.js");
 
 let myDatabase = function() {
 	this.infoList = [];
@@ -9,15 +9,31 @@ myDatabase.prototype.getArraySize = function() {
 	return this.infoList.length;
 }
 
-//add or modify.  Complete getAllObjects function.
 myDatabase.prototype.getAllObjects = function(res) {
-	User.find({},function(error,info) {
+	Team.find({},function(error,info) {
 		if (error) {
 			res.json(null);
 		} else {
 			let objs = [];
 			for (let i=0;i<info.length;i++) {
-			  objs.push({ident:info[i].ident,name:info[i].name});
+			  objs.push({username:info[i].username,location:info[i].location,name:info[i].name});
+			}
+			res.json(objs);
+		}
+	});
+}
+myDatabase.prototype.getAllObjectsofUser = function(res,username) {
+	Team.find({},function(error,info) {
+		if (error) {
+			res.json(null);
+		} else {
+			let objs = [];
+			for (let i=0;i<info.length;i++) {
+				if(info[i].username == username)
+			  objs.push({username:info[i].username,
+									location:info[i].location,
+									name:info[i].name,
+									lable:info[i].lable});
 			}
 			res.json(objs);
 		}
@@ -25,7 +41,7 @@ myDatabase.prototype.getAllObjects = function(res) {
 }
 
 myDatabase.prototype.getObjectWithID = function(res,ident) {
-	User.find({ident:ident},function(error,info) {
+	Team.find({ident:ident},function(error,info) {
 			if (error) {
 					res.json (null);
 			}
@@ -45,19 +61,20 @@ myDatabase.prototype.getObjectWithID = function(res,ident) {
 }
 
 myDatabase.prototype.addObject = function(res,obj) {
-	User.create(obj,function(error,info) {
+	console.log("in database");
+	Team.create(obj,function(error,info) {
 			if (error) {
 					 res.json(null);
 			}
 
-			res.json(info);
+			res.json(obj);
 	});
 }
 
 
 //add or modify.  Complete changeObject function.
-myDatabase.prototype.changeObject = function(res,ident,name) {
-	User.findOneAndUpdate({ident:ident},{name:name},function(error,info) {
+myDatabase.prototype.changeObject = function(res,username,name) {
+	Team.findOneAndUpdate({username:username},{name:name},function(error,info) {
 	          if (error) {
 	               res.json(null);
 	          }
@@ -71,7 +88,7 @@ myDatabase.prototype.changeObject = function(res,ident,name) {
 
 //add or modify.  Complete deleteObjectWithID function.
 myDatabase.prototype.deleteObjectWithID = function(res,ident) {
-	User.remove({ident:ident},function(error,removed) {
+	Team.remove({username:username},function(error,removed) {
 			if (error) {
 					 res.json(null);
 			}

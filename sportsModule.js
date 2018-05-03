@@ -27,21 +27,46 @@ module.exports = function (username, password) {
 
 //////////////////////////////////////////////////////////////////////////////////////
 module.exports["NBA"] = {
-    getNBATeams: function ( fn) {
+    getNBATeams: function (teamname, fn) {
     client.methods.getNBATeams(args, function (data, response) {
             if (response.statusCode !== 200) return fn(response.statusCode);
         var obj = data.overallteamstandings.teamstandingsentry;
         //obj.length = MAX_PLAYERS;
-            fn(false, obj);
+          var returnObj = undefined;
+        obj.forEach(function(users){
+          if(users.team){
+            if(users.team.Name.toLowerCase() == teamname.toLowerCase())
+            {
+                  returnObj = users;
+            }
+          }
+
         });
-    },
+            fn(false, returnObj);
+        });
+    },  checkifTeam: function (name, fn) {
+      client.methods.getNBATeams(args, function (data, response) {
+              if (response.statusCode !== 200) return fn(response.statusCode);
+          var obj = data.overallteamstandings.teamstandingsentry;
+          //obj.length = MAX_PLAYERS;
+            var returnObj = false;
+          obj.forEach(function(users){
+            if(users.team){
+              if(users.team.Name.toLowerCase() == name.toLowerCase())
+              {
+                    returnObj = true;
+              }
+            }
+
+          });
+              fn(false, returnObj);
+          });
+      },
      getNBAPlayer: function ( firstname,lastname,fn) {
        client.methods.getNBAPlayers(args, function (data, response) {
             if (response.statusCode !== 200) return fn(response.statusCode);
 
         var obj = data.activeplayers.playerentry;
-         //obj.length = MAX_PLAYERS;
-      //  console.log(obj);
         var returnObj = undefined;
         obj.forEach(function(users){
 
@@ -50,14 +75,12 @@ module.exports["NBA"] = {
             {
               if(users.player.LastName.toLowerCase() == lastname.toLowerCase())
               {
-
                   returnObj = users;
               }
             }
           }
 
         });
-        obj.length = MAX_PLAYERS;
             fn(false, returnObj);
         });
     },
@@ -66,8 +89,6 @@ module.exports["NBA"] = {
             if (response.statusCode !== 200) return fn(response.statusCode);
 
         var obj = data.cumulativeplayerstats.playerstatsentry;
-         //obj.length = MAX_PLAYERS;
-      //  console.log(obj);
         var returnObj = undefined;
         obj.forEach(function(users){
 
@@ -83,7 +104,6 @@ module.exports["NBA"] = {
           }
 
         });
-    //    obj.length = MAX_PLAYERS;
             fn(false, returnObj);
         });
     },
@@ -93,7 +113,6 @@ module.exports["NBA"] = {
         var obj = data.activeplayers.playerentry;
         var returnObject = [];
         obj.forEach(function(users){
-          console.log(users.team);
           if(users.team)
           {
             if(users.team.Name.toLowerCase() == teamname.toLowerCase())
@@ -103,9 +122,6 @@ module.exports["NBA"] = {
           }
 
         });
-        console.log(returnObject);
-  //   obj.length = MAX_PLAYERS;
-
          fn(false, returnObject);
         });
     }

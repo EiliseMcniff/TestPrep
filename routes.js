@@ -2,8 +2,9 @@ var express = require("express");
 var passport = require("passport");
 var path = require("path");
 var sports = require('./sportsModule');
-sports('andrewyates', 'T4pQsEYsxXop');
+sports('mvhscs1', 'Asdfghjk!1');
 var User = require("./models/user");
+
 var router = express.Router();
 const myDatabase = require('./myDatabase');
 
@@ -95,11 +96,14 @@ console.log("get login");
 router.post('/create', function(req, res){
   if(req.isAuthenticated())
   {
-  	if (req.body.name == "") {
+  	if (req.body.username == "") {
   		res.json(null);
   		return;
   	}
-    db.addObject(res,{ident:req.body.ident,name:req.body.name});
+    db.addObject(res,{username:req.body.username,
+                      location:req.body.location,
+                      name:req.body.name,
+                      lable:req.body.lable});
   }else {
     req.logout();
     res.json({redirect:"/login"});
@@ -110,7 +114,7 @@ router.post('/create', function(req, res){
 router.get("/requestNBA", function(req, res, next) {
   if(req.isAuthenticated())
   {
-	sports.NBA.getNBAPlayerStats( req.query.firstname,req.query.lastname,function (err, obj) {
+	sports.NBA.getNBAPlayers( req.query.teamname,function (err, obj) {
     		if (err) {
         		return console.log('Error occurred active_players: ' + err);
     		}
@@ -137,6 +141,16 @@ router.get("/session", function(req, res) {
 router.get("/userInfo",function(req,res){
      if (req.isAuthenticated()) {
 		res.json({username:req.user.username});
+	}
+	else {
+		res.json(null);
+	}
+});
+router.post("/userTeamname",function(req,res){
+  console.log(req.body.username);
+     if (req.isAuthenticated()) {
+       db.getAllObjectsofUser(res,req.body.username);
+
 	}
 	else {
 		res.json(null);
